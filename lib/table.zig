@@ -27,12 +27,12 @@ pub const Table = struct {
 
     fn readVOffset(bytes: []u8) Error!VOffset {
         if (bytes.len < @sizeOf(VOffset)) return Error.PrematureEnd;
-        return std.mem.readIntLittle(VOffset, bytes[0..@sizeOf(VOffset)]);
+        return std.mem.readInt(VOffset, bytes[0..@sizeOf(VOffset)], std.builtin.Endian.little);
     }
 
     fn readOffset(bytes: []u8) Error!Offset {
         if (bytes.len < @sizeOf(Offset)) return Error.PrematureEnd;
-        return std.mem.readIntLittle(Offset, bytes[0..@sizeOf(Offset)]);
+        return std.mem.readInt(Offset, bytes[0..@sizeOf(Offset)], std.builtin.Endian.little);
     }
 
     pub fn init(size_prefixed_bytes: []u8) Error!Self {
@@ -135,7 +135,7 @@ pub const Table = struct {
     pub fn isScalar(comptime T: type) bool {
         return switch (@typeInfo(T)) {
             .Void, .Bool, .Int, .Float, .Array, .Enum => true,
-            .Struct => |s| s.layout == .Extern or s.layout == .Packed,
+            .Struct => |s| s.layout == .@"extern" or s.layout == .@"packed",
             else => false,
         };
     }

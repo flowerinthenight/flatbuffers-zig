@@ -1,14 +1,20 @@
 .{
-	.name = "flatbuffers",
-	.version = "0.0.3",
-	.dependencies = .{
-		.clap = .{
-			.url = "https://github.com/Hejsil/zig-clap/archive/f49b94700e0761b7514abdca0e4f0e7f3f938a93.tar.gz",
-			.hash = "1220f48518ce22882e102255ed3bcdb7aeeb4891f50b2cdd3bd74b5b2e24d3149ba2"
-		},
-		.flatbuffers = .{
-			.url = "https://github.com/clickingbuttons/flatbuffers/archive/refs/tags/0.0.4.tar.gz",
-			.hash = "122094e2b1ae9ef4b8bc50ecde2ee886aab1d4bf2e8b648927b53b48f7810b60e243"
-		},
-	}
+    .name = "flatbuffers",
+    .version = "0.0.3",
+    .dependencies = .{
+        .clap = .{
+            .url = "https://github.com/Hejsil/zig-clap/archive/refs/tags/0.9.1.tar.gz",
+            .hash = "122062d301a203d003547b414237229b09a7980095061697349f8bef41be9c30266b",
+        },
+        .flatbuffers = .{
+            .url = "https://github.com/flowerinthenight/flatbuffers/archive/refs/tags/v0.0.2.tar.gz",
+            .hash = "1220ae1b7185cfa8b1c53ab62eae1efb3b2270d0e0ff5672ff45ed7c46786ea97b61",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "lib",
+        "codegen",
+    },
 }

@@ -9,15 +9,12 @@ const Case = @import("./util.zig").Case;
 
 fn fatal(comptime T: type, msg: []const u8) T {
     std.debug.print("{s}\n", .{msg});
-    std.os.exit(1);
+    std.posix.exit(1);
     unreachable;
 }
 
-fn walk(opts: Options) !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-
-    var dir = try std.fs.cwd().openIterableDir(opts.input_dir, .{});
+fn walk(allocator: std.mem.Allocator, opts: Options) !void {
+    var dir = try std.fs.cwd().openDir(opts.input_dir, .{ .iterate = true });
     defer dir.close();
 
     var walker = try dir.walk(allocator);
@@ -51,8 +48,12 @@ pub fn main() !void {
         \\-f, --function-case <str>  Casing for function names (camel, snake, title) (default camel)
         \\
     );
+
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
     var diag = clap.Diagnostic{};
     var res = clap.parse(clap.Help, &params, clap.parsers.default, .{
+        .allocator = allocator,
         .diagnostic = &diag,
     }) catch |err| {
         diag.report(std.io.getStdErr().writer(), err) catch {};
@@ -71,7 +72,7 @@ pub fn main() !void {
     const documentation = res.args.@"no-documentation" == 0;
     const function_case = Case.fromString(res.args.@"function-case" orelse "camel") orelse fatal(Case, "invalid function case");
 
-    try walk(Options{
+    try walk(allocator, Options{
         .extension = extension,
         .input_dir = input_dir,
         .output_dir = output_dir,
